@@ -4,6 +4,7 @@ const express     = require('express');
 const bodyParser  = require('body-parser');
 const cors        = require('cors');
 require('dotenv').config();
+const mongoose    = require('mongoose');
 
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
@@ -17,6 +18,15 @@ app.use(cors({origin: '*'})); //USED FOR FCC TESTING PURPOSES ONLY!
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//Connect to MongoDB
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+    process.exit(1); // Exit the process if connection fails
+  });
+
 
 //Index page (static HTML)
 app.route('/')
